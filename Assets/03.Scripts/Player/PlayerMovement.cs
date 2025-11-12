@@ -16,6 +16,14 @@ public class PlayerMovement : MonoBehaviour
 
     private PlayerGroundCheck PGC;
 
+    private float xInput;
+    private float zInput;
+
+    private bool isRun;
+
+    private float turnSpeed = 1f;
+    private Vector3 inputDir;
+
     //마우스 우클릭으로 이동
     #region
     private NavMeshAgent agent;
@@ -33,41 +41,44 @@ public class PlayerMovement : MonoBehaviour
         currentSpeed = moveSpeed;
         YPos = transform.position.y;
     }
-
-    private void FixedUpdate()
+    private void Update()
     {
-        anim.SetBool("04_InAir", false);
+        xInput = Input.GetAxisRaw("Horizontal");
+        zInput = Input.GetAxisRaw("Vertical");
+
         #region : 점프
         if (Input.GetKeyDown(KeyCode.Space) && PGC.GroundCheck())
         {
             StartCoroutine(Jump());
         }
+        if (PGC.GroundCheck()) anim.SetBool("04_InAir", false);
         #endregion
-
-        #region : 이동
-        float xInput = Input.GetAxis("Horizontal");
-        float zInput = Input.GetAxis("Vertical");
-
-        if(Mathf.Abs(xInput) >=0.001f || Mathf.Abs(zInput) >= 0.001f)
+        #region : 달리기
+        if (Input.GetKeyDown(KeyCode.LeftShift))
         {
-            if (Input.GetKeyDown(KeyCode.LeftShift))
-            {
-                isWalking = false;
-                isRunning = true;
-                anim.SetBool("02_Run",isRunning);
-                currentSpeed = moveSpeed * 3;
-            }
-            if (Input.GetKeyUp(KeyCode.LeftShift))
-            {
-                isWalking = true;
-                isRunning = false;
-                anim.SetBool("02_Run", isRunning);
-                currentSpeed = moveSpeed;
-            }
+            isRun = true;
+            Run(isRun);
+        }
+        if (Input.GetKeyUp(KeyCode.LeftShift))
+        {
+            isRun = false;
+            Run(isRun);
+        }
+        #endregion
+        #region: 회전
+        float rotDir = xInput * turnSpeed;
+        transform.Rotate(0, rotDir, 0);
+        #endregion
+    }
+
+    private void FixedUpdate()
+    {
+        #region : 이동
+        if(Mathf.Abs(zInput) >= 0.001f)
+        {
             isWalking = true;
             anim.SetBool("01_Walk", isWalking);
-            Move(new Vector3(xInput, 0, zInput).normalized * currentSpeed);
-            
+            Move(zInput * currentSpeed);
         }
         else
         {
@@ -76,8 +87,7 @@ public class PlayerMovement : MonoBehaviour
         }
         #endregion
 
-        //마우스 우클릭으로 이동
-        #region 
+        #region : 마우스 우클릭으로 이동
         //if (Input.GetMouseButtonDown(1)) 
         //{
         //    RaycastHit hit;
@@ -98,12 +108,13 @@ public class PlayerMovement : MonoBehaviour
         //    isWalking = false;
         //    anim.SetBool("01_Walk", isWalking);
         //}
-        #endregion 
+        #endregion
     }
 
-    private void Move(Vector3 inputVec) 
+    private void Move(float inputVecZ) 
     {
-        rb.velocity = inputVec;
+        Vector3 forward = transform.forward * inputVecZ;
+        rb.velocity = new Vector3(forward.x, rb.velocity.y, forward.z);
     }
 
     IEnumerator Jump()
@@ -115,6 +126,22 @@ public class PlayerMovement : MonoBehaviour
         {
             anim.SetBool("04_InAir", true);
         }
-        
+    }
+    private void Run(bool isrunning)
+    {
+        if (isrunning)
+        {
+            isWalking = false;
+            isRunning = true;
+            anim.SetBool("02_Run", isRunning);
+            currentSpeed = moveSpeed * 3;
+        }
+        else
+        {
+            isWalking = true;
+            isRunning = false;
+            anim.SetBool("02_Run", isRunning);
+            currentSpeed = moveSpeed;
+        }
     }
 }
