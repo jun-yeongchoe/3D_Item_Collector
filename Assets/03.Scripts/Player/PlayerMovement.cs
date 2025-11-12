@@ -5,8 +5,8 @@ using UnityEngine.AI;
 
 public class PlayerMovement : MonoBehaviour
 {
-    [SerializeField] private float moveSpeed = 100f;
-    [SerializeField] private float jumpForce = 50f;
+    [SerializeField] private float moveSpeed = 20f;
+    [SerializeField] private float jumpForce = 8f;
     private float currentSpeed;
     private Rigidbody rb;
     private Animator anim;
@@ -22,7 +22,6 @@ public class PlayerMovement : MonoBehaviour
     private bool isRun;
 
     private float turnSpeed = 1f;
-    private Vector3 inputDir;
 
     //마우스 우클릭으로 이동
     #region
@@ -44,7 +43,27 @@ public class PlayerMovement : MonoBehaviour
     private void Update()
     {
         xInput = Input.GetAxisRaw("Horizontal");
-        zInput = Input.GetAxisRaw("Vertical");
+        if (!PGC.GroundCheck())
+        {
+            anim.SetBool("04_InAir", true);
+            //currentSpeed = moveSpeed;
+        }
+        if (PGC.GroundCheck()) 
+        {
+            zInput = Input.GetAxisRaw("Vertical");
+            #region : 달리기
+            if (Input.GetKeyDown(KeyCode.LeftShift))
+            {
+                isRun = true;
+                Run(isRun);
+            }
+            if (Input.GetKeyUp(KeyCode.LeftShift))
+            {
+                isRun = false;
+                Run(isRun);
+            }
+            #endregion
+        }
 
         #region : 점프
         if (Input.GetKeyDown(KeyCode.Space) && PGC.GroundCheck())
@@ -53,18 +72,7 @@ public class PlayerMovement : MonoBehaviour
         }
         if (PGC.GroundCheck()) anim.SetBool("04_InAir", false);
         #endregion
-        #region : 달리기
-        if (Input.GetKeyDown(KeyCode.LeftShift))
-        {
-            isRun = true;
-            Run(isRun);
-        }
-        if (Input.GetKeyUp(KeyCode.LeftShift))
-        {
-            isRun = false;
-            Run(isRun);
-        }
-        #endregion
+
         #region: 회전
         float rotDir = xInput * turnSpeed;
         transform.Rotate(0, rotDir, 0);
@@ -120,7 +128,10 @@ public class PlayerMovement : MonoBehaviour
     IEnumerator Jump()
     {
         anim.SetTrigger("03_Jump");
-        rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+        //rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+        Vector3 v = rb.velocity;
+        v.y = jumpForce;
+        rb.velocity = v;
         yield return new WaitForSeconds(0.5f);
         if (!PGC.GroundCheck())
         {
