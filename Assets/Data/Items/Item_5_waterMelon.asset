@@ -15,4 +15,4 @@ MonoBehaviour:
   ID: 5
   itemName: waterMelon
   point: 10
-  prefab: {fileID: 0}
+  prefab: {fileID: 8057506197577249620, guid: 27ff40c9a502e764380b18a3a6a85784, type: 3}
