@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class ConcreateFactoryB : Factory
 {
-    private ProductB m_ProductPrefab;
+    [SerializeField] private ProductB m_ProductPrefab;
 
     public override IProduct GetProduct(Vector3 pos)
     {

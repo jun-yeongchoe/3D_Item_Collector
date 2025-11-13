@@ -15,4 +15,4 @@ MonoBehaviour:
   ID: 4
   itemName: lemon
   point: 5
-  prefab: {fileID: 0}
+  prefab: {fileID: 8668791507910504664, guid: 306e4e4a73bca9142902272e7306d41d, type: 3}

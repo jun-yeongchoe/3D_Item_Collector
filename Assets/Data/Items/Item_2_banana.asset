@@ -15,4 +15,4 @@ MonoBehaviour:
   ID: 2
   itemName: banana
   point: 2
-  prefab: {fileID: 0}
+  prefab: {fileID: 4000904952893325046, guid: 020276a24ff02f84aa20f50cade62392, type: 3}

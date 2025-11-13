@@ -15,4 +15,4 @@ MonoBehaviour:
   ID: 3
   itemName: grapes
   point: 3
-  prefab: {fileID: 0}
+  prefab: {fileID: 8416063062602980067, guid: 391dc6fcf5ed747428966f0baf71fb26, type: 3}

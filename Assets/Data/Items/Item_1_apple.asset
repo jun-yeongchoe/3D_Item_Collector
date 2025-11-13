@@ -15,4 +15,4 @@ MonoBehaviour:
   ID: 1
   itemName: apple
   point: 1
-  prefab: {fileID: 0}
+  prefab: {fileID: 7353129950681327357, guid: 8cb41bc3f2afa1a47b3f7499ee5cb529, type: 3}
