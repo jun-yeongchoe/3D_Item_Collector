@@ -64,7 +64,7 @@ public class ProductA : MonoBehaviour, IProduct
             //점수처리 필요
             
             //풀링에서 비활성화하는 코드필요
-            Destroy(gameObject);
+            gameObject.SetActive(false);
         }
     }
 

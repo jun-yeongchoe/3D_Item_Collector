@@ -41,7 +41,9 @@ public class ItemSpawner : MonoBehaviour
                 Vector3 pos = new Vector3(x, y, z);
                 Factory selectedFactory = m_Factories[Random.Range(0, m_Factories.Length)];
                 IProduct product = selectedFactory.GetProduct(pos + m_Offset);
-                if(product is Component component) m_createdProducts.Add(component.gameObject);
+                if (product is Component component) { 
+                    component.gameObject.SetActive(false);
+                    m_createdProducts.Add(component.gameObject); }
                 spawned++;
             }
         }
