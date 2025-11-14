@@ -3,15 +3,35 @@ using UnityEngine;
 public class ConcreateFactoryE : Factory
 {
     [SerializeField] private ProductE m_ProductPrefab;
+    [SerializeField] private int initCount = 15;
+    [SerializeField] private Transform poolRoot;
+
+    private bool init = false;
+
+    private void Awake()
+    {
+        if (init) return;
+        init = true;
+
+        if (m_ProductPrefab == null) return;
+        if (poolRoot == null) poolRoot = GameManager.Pool.transform;
+
+        GameManager.Pool.CreatePool(m_ProductPrefab, initCount, poolRoot);
+    }
 
     public override IProduct GetProduct(Vector3 pos)
     {
-        GameObject inst = Instantiate(m_ProductPrefab.gameObject, pos, Quaternion.identity);
+        if (m_ProductPrefab == null) return null;
 
-        ProductE newProduct = inst.GetComponent<ProductE>();
+        ProductE inst = GameManager.Pool.GetFromPool(m_ProductPrefab);
 
-        newProduct.Initialize();
+        if (inst == null) inst = Instantiate(m_ProductPrefab, pos, Quaternion.identity);
 
-        return newProduct;
+        inst.transform.position = pos;
+        inst.gameObject.SetActive(true);
+
+        inst.Initialize();
+
+        return inst;
     }
 }

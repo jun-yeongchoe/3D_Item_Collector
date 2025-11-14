@@ -8,6 +8,7 @@ public class ItemSpawner : MonoBehaviour
     [SerializeField] private Factory[] m_Factories;
     [SerializeField] private int itemCount = 15;
     private float maxY = 3f;
+
     private List<GameObject> m_createdProducts = new List<GameObject>();
 
     private void Start()
@@ -27,7 +28,9 @@ public class ItemSpawner : MonoBehaviour
         int spawned = 0;
         int maxTry = itemCount * 30;
 
-        while(spawned < itemCount && maxTry > 0)
+       
+
+        while (spawned < itemCount && maxTry > 0)
         {
             maxTry--;
 
@@ -41,9 +44,10 @@ public class ItemSpawner : MonoBehaviour
                 Vector3 pos = new Vector3(x, y, z);
                 Factory selectedFactory = m_Factories[Random.Range(0, m_Factories.Length)];
                 IProduct product = selectedFactory.GetProduct(pos + m_Offset);
-                if (product is Component component) { 
-                    component.gameObject.SetActive(false);
-                    m_createdProducts.Add(component.gameObject); }
+                if (product is MonoBehaviour mb)
+                {
+                    m_createdProducts.Add(mb.gameObject);
+                }
                 spawned++;
             }
         }
