@@ -21,7 +21,7 @@ public static class GameManager
             Init();
             GameObject obj = new GameObject(name);
             manager = obj.AddComponent<T>();
-            Object.DontDestroyOnLoad( obj );
+            Object.DontDestroyOnLoad(obj);
             obj.transform.SetParent(_root.transform);
         }
     }

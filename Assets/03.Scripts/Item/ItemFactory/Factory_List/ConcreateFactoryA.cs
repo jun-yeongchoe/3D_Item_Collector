@@ -2,28 +2,36 @@ using UnityEngine;
 
 public class ConcreateFactoryA : Factory
 {
-    //private GameObject m_ProductPrefab;
-    //[SerializeField] private ItemSO itemData;
-
-    //private void Awake()
-    //{
-    //    m_ProductPrefab = itemData.prefab;
-    //}
-
-    //public override IProduct GetProduct(Vector3 pos)
-    //{
-    //    GameObject inst = Instantiate(m_ProductPrefab.g, pos, Quaternion.identity);
-
     [SerializeField] private ProductA m_ProductPrefab;
+    [SerializeField] private int initCount = 15;
+    [SerializeField] private Transform poolRoot;
+
+    private bool init = false;
+
+    private void Awake()
+    {
+        if (init) return;
+        init = true;
+
+        if (m_ProductPrefab == null) return;
+        if (poolRoot == null) poolRoot = GameManager.Pool.transform;
+
+        GameManager.Pool.CreatePool(m_ProductPrefab, initCount, poolRoot);
+    }
 
     public override IProduct GetProduct(Vector3 pos)
     {
-        GameObject inst = Instantiate(m_ProductPrefab.gameObject, pos, Quaternion.identity);
-        // ---------------------
-        ProductA newProduct = inst.GetComponent<ProductA>();
+        if (m_ProductPrefab == null) return null;
 
-        newProduct.Initialize();
+        ProductA inst = GameManager.Pool.GetFromPool(m_ProductPrefab);
 
-        return newProduct;
+        if(inst == null) inst = Instantiate(m_ProductPrefab, pos, Quaternion.identity);
+
+        inst.transform.position = pos;
+        inst.gameObject.SetActive(true);
+
+        inst.Initialize();
+
+        return inst;
     }
 }
