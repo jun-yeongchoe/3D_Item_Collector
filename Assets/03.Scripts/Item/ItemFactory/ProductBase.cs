@@ -1,11 +1,11 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SocialPlatforms.Impl;
 
 public class ProductBase : MonoBehaviour, IProduct
 {
     [SerializeField] private ItemSO itemData;
     private string m_ProductName;
+    public int score { get; private set; }
     private ParticleSystem m_particleSystem;
 
     public string ProductName
@@ -17,7 +17,7 @@ public class ProductBase : MonoBehaviour, IProduct
     public void Initialize()
     {
         m_ProductName = itemData.name;
-
+        score = itemData.point;
         m_particleSystem = GetComponent<ParticleSystem>();
         if (m_particleSystem == null) return;
 

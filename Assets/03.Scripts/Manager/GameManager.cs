@@ -4,7 +4,9 @@ public static class GameManager
 {
     private static GameObject _root;
     private static PoolManager _pool;
+    public static int Score;
 
+    
     private static void Init()
     {
         if( _root == null)

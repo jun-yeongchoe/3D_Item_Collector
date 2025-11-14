@@ -44,7 +44,7 @@ public class ProductD : ProductBase
         if (dist < 0.3f)
         {
             //점수처리 필요
-
+            GameManager.Score += base.score;
             //풀링에서 비활성화하는 코드필요
             GameManager.Pool.ReturnPool(this);
         }

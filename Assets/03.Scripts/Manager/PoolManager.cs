@@ -6,7 +6,8 @@ public class PoolManager : MonoBehaviour
 {
     public static PoolManager Instance {  get; private set; }
 
-    private Dictionary<string, object> pools = new Dictionary<string, object>();
+    public Dictionary<string, object> pools = new Dictionary<string, object>();
+
 
     private void Awake()
     {
@@ -19,6 +20,11 @@ public class PoolManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
+    }
+
+    private void Update()
+    {
+        
     }
 
     public void CreatePool<T>(T prefab, int initCount, Transform parent = null) where T : MonoBehaviour

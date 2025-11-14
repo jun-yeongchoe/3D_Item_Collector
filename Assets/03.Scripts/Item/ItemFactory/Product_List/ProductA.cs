@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SocialPlatforms.Impl;
 
 public class ProductA : ProductBase
 {
@@ -8,6 +9,8 @@ public class ProductA : ProductBase
     private Transform playerTF;
     private bool isMagnetOn;
     [SerializeField] private float followSpeed = 30f;
+
+    
 
     private void OnEnable()
     {
@@ -44,7 +47,7 @@ public class ProductA : ProductBase
         if(dist < 0.3f)
         {
             //점수처리 필요
-
+            GameManager.Score += base.score;
             //풀링에서 비활성화하는 코드필요
             GameManager.Pool.ReturnPool(this);
         }
