@@ -22,10 +22,6 @@ public class PoolManager : MonoBehaviour
         }
     }
 
-    private void Update()
-    {
-        
-    }
 
     public void CreatePool<T>(T prefab, int initCount, Transform parent = null) where T : MonoBehaviour
     {

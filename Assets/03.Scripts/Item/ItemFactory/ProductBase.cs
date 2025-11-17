@@ -6,7 +6,8 @@ public class ProductBase : MonoBehaviour, IProduct
     [SerializeField] private ItemSO itemData;
     private string m_ProductName;
     public int score { get; private set; }
-    private ParticleSystem m_particleSystem;
+    
+    public AudioSource audioSource;
 
     public string ProductName
     {
@@ -18,10 +19,15 @@ public class ProductBase : MonoBehaviour, IProduct
     {
         m_ProductName = itemData.name;
         score = itemData.point;
-        m_particleSystem = GetComponent<ParticleSystem>();
-        if (m_particleSystem == null) return;
 
-        m_particleSystem.Stop();
-        m_particleSystem.Play();
+        audioSource = GetComponent<AudioSource>();
+
+        if (audioSource != null)
+        {
+            audioSource.playOnAwake = false;
+            audioSource.loop = false;
+        }
+        
+
     }
 }
