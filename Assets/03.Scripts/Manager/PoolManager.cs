@@ -22,14 +22,12 @@ public class PoolManager : MonoBehaviour
         }
     }
 
-
     public void CreatePool<T>(T prefab, int initCount, Transform parent = null) where T : MonoBehaviour
     {
         if (prefab == null) return;
 
         string key = prefab.name;
         if (pools.ContainsKey(key)) return;
-
         pools.Add(key, new ObjectPool<T>(prefab, initCount, parent));
     }
 
@@ -53,7 +51,6 @@ public class PoolManager : MonoBehaviour
         }
     }
 
-
     public void ReturnPool<T>(T instance) where T : MonoBehaviour
     {
         if (instance == null) return;
@@ -72,6 +69,21 @@ public class PoolManager : MonoBehaviour
         else 
         {
             return;
+        }
+    }
+
+    public void ResetAllPools()
+    {
+        foreach(var key in pools)
+        {
+            if(key.Value ==null) continue;
+
+            var type = key.Value.GetType();
+            var method = type.GetMethod("ResetAll");
+            if(method != null)
+            {
+                method.Invoke(key.Value, null);
+            }
         }
     }
 }

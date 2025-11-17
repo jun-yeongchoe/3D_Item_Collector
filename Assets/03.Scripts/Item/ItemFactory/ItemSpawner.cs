@@ -17,7 +17,7 @@ public class ItemSpawner : MonoBehaviour
         PlaceItem();
     }
 
-    private void PlaceItem()
+    public void PlaceItem()
     {
         if (m_Factories == null || m_Factories.Length == 0) return;
 

@@ -2,12 +2,19 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ObjectPool<T> where T : MonoBehaviour
+public class ObjectPool<T> : IPoolInfo where T : MonoBehaviour
 {
     private T prefab;
     private Queue<T> pool = new Queue<T>();
 
     public Transform Root {  get; private set; }
+
+    private int totalCount;
+    private int disabledCount;
+    public int TotalCount => totalCount;
+    public int InactiveCount => pool.Count;
+    public int ActiveCount => totalCount - pool.Count;
+    public int DisabledCount => disabledCount;
 
     public ObjectPool(T prefab, int initCount, Transform parent = null)
     {
@@ -25,6 +32,7 @@ public class ObjectPool<T> where T : MonoBehaviour
             inst.name = prefab.name;
             inst.gameObject.SetActive(false);
             pool.Enqueue(inst);
+            totalCount++;
         }
     }
     public T Dequeue()
@@ -41,6 +49,22 @@ public class ObjectPool<T> where T : MonoBehaviour
         if(instance ==null)return;
         instance.gameObject.SetActive(false);
         pool.Enqueue(instance);
+        disabledCount++;
     }
    
+    public void ResetAll()
+    {
+        pool.Clear();
+
+        foreach(Transform c in Root)
+        {
+            var obj = c.GetComponent<T>();
+            if(obj == null) continue;
+
+            obj.gameObject.SetActive(false);
+            pool.Enqueue((T)obj);
+        }
+
+        disabledCount = 0;
+    }
 }

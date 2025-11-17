@@ -2,48 +2,73 @@ using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.Design.Serialization;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 
-public class ScoreManager : MonoBehaviour
+public class UIManager : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI score_Text;
     [SerializeField] private TextMeshProUGUI time_Text;
     [SerializeField] private TextMeshProUGUI[] quest_Text;
 
-    private float time;
+    public float time;
     private float remit_Time = 60f;
     #region: 각 아이템별 개수
-    List<int> count = new List<int>(5);
+    int count = 0;
+    [SerializeField] private string[] poolKeys;
+    private IPoolInfo[] questPools;
     #endregion
-    
+
+    [SerializeField] public GameObject gameOverPanel;
+
 
     private void Start()
     {
-        foreach (var i in PoolManager.Instance.pools)
-        {
-            Debug.Log(i.Value);
-            // 20251114 여기까지 작성 -> 오브젝트 풀 아래의 비활성 객체 갯수 받아서 현재/전체 UI 구성중
-        }
         time = remit_Time;
+        
+        int len = Mathf.Min(poolKeys.Length, quest_Text.Length);
+        questPools = new IPoolInfo[len];
+
+        for (int i = 0; i < len; i++)
+        {
+            string key = poolKeys[i];
+
+            if (PoolManager.Instance.pools.TryGetValue(key, out var box) && box is IPoolInfo info)
+            {
+                questPools[i] = info;
+            }
+        }
 
     }
-
     void Update()
     {
-        for (int i = 0; i < count.Count; i++) 
-        {
-            Debug.Log($"{i} 번째 항목의 전체 갯수 : {count[i]}");
-        }
-
         time -= Time.deltaTime;
         if (time < 0)
         {
             time = 0;
             // 게임오버 표시
+            GameManager.isGameOver = true;
         }
 
         score_Text.text = $"Score : {GameManager.Score}";
         time_Text.text = $"{ToSSMS(time)}";
+        for (int i = 0; i < questPools.Length; i++)
+        {
+            var info = questPools[i];
+            var txt = quest_Text[i];
+
+            if (info == null || txt == null) continue;
+            int collected = info.DisabledCount;
+            int totalActive = info.DisabledCount + info.ActiveCount;
+
+            txt.text = $"{poolKeys[i]} : {collected} / {totalActive}";
+
+        }
+    }
+
+    public void ResetTimer() 
+    { 
+        time = 60f; 
     }
 
     string ToSSMS(float total)

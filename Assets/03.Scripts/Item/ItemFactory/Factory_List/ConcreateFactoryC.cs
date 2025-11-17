@@ -32,6 +32,8 @@ public class ConcreateFactoryC : Factory
 
         inst.Initialize();
 
+        GameManager.MaxScore += inst.score;
+
         return inst;
     }
 }

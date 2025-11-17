@@ -28,6 +28,5 @@ public class ProductBase : MonoBehaviour, IProduct
             audioSource.loop = false;
         }
         
-
     }
 }
