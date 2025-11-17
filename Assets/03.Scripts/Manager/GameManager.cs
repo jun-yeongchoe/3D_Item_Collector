@@ -5,8 +5,9 @@ public static class GameManager
     private static GameObject _root;
     private static PoolManager _pool;
     public static int Score;
+    public static int MaxScore;
+    public static bool isGameOver;
 
-    
     private static void Init()
     {
         if( _root == null)
@@ -36,4 +37,5 @@ public static class GameManager
             return _pool;
         }
     }
+
 }
