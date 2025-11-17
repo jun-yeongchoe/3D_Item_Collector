@@ -1,12 +1,13 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SocialPlatforms.Impl;
 
 public class ProductBase : MonoBehaviour, IProduct
 {
     [SerializeField] private ItemSO itemData;
     private string m_ProductName;
-    private ParticleSystem m_particleSystem;
+    public int score { get; private set; }
+    
+    public AudioSource audioSource;
 
     public string ProductName
     {
@@ -17,11 +18,16 @@ public class ProductBase : MonoBehaviour, IProduct
     public void Initialize()
     {
         m_ProductName = itemData.name;
+        score = itemData.point;
 
-        m_particleSystem = GetComponent<ParticleSystem>();
-        if (m_particleSystem == null) return;
+        audioSource = GetComponent<AudioSource>();
 
-        m_particleSystem.Stop();
-        m_particleSystem.Play();
+        if (audioSource != null)
+        {
+            audioSource.playOnAwake = false;
+            audioSource.loop = false;
+        }
+        
+
     }
 }

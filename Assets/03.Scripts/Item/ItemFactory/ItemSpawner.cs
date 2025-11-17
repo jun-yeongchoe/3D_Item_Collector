@@ -52,12 +52,5 @@ public class ItemSpawner : MonoBehaviour
             }
         }
     }
-    private void OnDestroy()
-    {
-        foreach (GameObject product in m_createdProducts)
-        {
-            if (product != null) Destroy(product);
-        }
-        m_createdProducts.Clear();
-    }
+    
 }

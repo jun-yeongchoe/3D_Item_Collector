@@ -1,16 +1,23 @@
 using UnityEngine;
+using UnityEngine.SocialPlatforms.Impl;
 
 public class ProductA : ProductBase
 {
     private float magneticRadius = 7f;
     [SerializeField] private LayerMask player;
+    [SerializeField] ParticleSystem m_particleSystem;
 
     private Transform playerTF;
     private bool isMagnetOn;
     [SerializeField] private float followSpeed = 30f;
 
+
     private void OnEnable()
     {
+        if (m_particleSystem != null)
+        {
+            m_particleSystem.Stop();
+        }
         isMagnetOn = false;
         playerTF = null;
         Initialize();
@@ -44,9 +51,28 @@ public class ProductA : ProductBase
         if(dist < 0.3f)
         {
             //점수처리 필요
+            GameManager.Score += base.score;
 
-            //풀링에서 비활성화하는 코드필요
-            GameManager.Pool.ReturnPool(this);
+            if (audioSource != null && audioSource.clip != null) 
+            {
+                AudioSource.PlayClipAtPoint(audioSource.clip, transform.position, 3.0f);
+            }
+
+            if (m_particleSystem != null)
+            {
+                var fx = Instantiate(m_particleSystem, transform.position, Quaternion.identity);
+
+                fx.gameObject.SetActive(true);
+                fx.Stop();
+                fx.Play();
+
+                var main = fx.main;
+                float life = main.duration + main.startLifetime.constantMax;
+                Destroy(fx.gameObject, life);
+            }
+
+             //풀링에서 비활성화하는 코드필요
+             GameManager.Pool.ReturnPool(this);
         }
     }
 
