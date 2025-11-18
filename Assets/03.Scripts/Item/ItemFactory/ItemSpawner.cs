@@ -19,6 +19,7 @@ public class ItemSpawner : MonoBehaviour
 
     public void PlaceItem()
     {
+        GameManager.MaxScore = 0;
         if (m_Factories == null || m_Factories.Length == 0) return;
 
         TerrainData td = SpawnPlace.terrainData;
