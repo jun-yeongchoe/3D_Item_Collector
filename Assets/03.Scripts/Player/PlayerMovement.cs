@@ -21,7 +21,7 @@ public class PlayerMovement : MonoBehaviour
 
     private bool isRun;
 
-    private float turnSpeed = 1f;
+    private float turnSpeed = 180f;
 
     //마우스 우클릭으로 이동
     #region
@@ -74,7 +74,7 @@ public class PlayerMovement : MonoBehaviour
         #endregion
 
         #region: 회전
-        float rotDir = xInput * turnSpeed;
+        float rotDir = xInput * turnSpeed*Time.deltaTime;
         transform.Rotate(0, rotDir, 0);
         #endregion
     }
